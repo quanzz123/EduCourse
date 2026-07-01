@@ -169,6 +169,25 @@ function NavBar() {
                       <span>Đăng khóa học</span>
                     </Link>
                     <Link
+                      to="/courses/my-courses"
+                      className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors duration-200"
+                    >
+                      <svg
+                        className="w-4.5 h-4.5 text-slate-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <span>Khóa học của tôi</span>
+                    </Link>
+                    <Link
                       to="/profile"
                       className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors duration-200"
                     >
