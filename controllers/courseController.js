@@ -33,6 +33,7 @@ class courseController {
             res.status(500).json({error:error.message})
         }
     }
+    //[PUT] /courses/:id
     async update(req, res) {
         try {
             const updatedCourse = await courseService.update(req.params.id, req.body);
@@ -44,6 +45,7 @@ class courseController {
             res.status(500).json({error:error.message})
         }
     }
+    //[DELETE] /courses/:id
     async delete(req, res) {
         try {
             const deleted = await courseService.delete(req.params.id);
@@ -51,6 +53,28 @@ class courseController {
                 return res.status(404).json({ message: 'Course not found' });
             }
             res.status(200).json({ message: 'Course deleted successfully' });
+        } catch (error) {
+            res.status(500).json({error:error.message})
+        }
+    }
+
+    // [GET] /courses/deleted
+    async getDeleted(req, res) {
+        try {
+            const courses = await courseService.getDeletedCourses();
+            res.status(200).json(courses)
+        } catch (error) {
+            res.status(500).json({error: error.message})
+        }
+    }
+    // [POST] /courses/restore/:id
+     async restore(req, res) {
+        try {
+            const restoredCourse = await courseService.restore(req.params.id);
+            if (!restoredCourse) {
+                return res.status(404).json({ message: 'Course not found' });
+            }
+            res.status(200).json({ message: 'Course restored successfully', data: restoredCourse });
         } catch (error) {
             res.status(500).json({error:error.message})
         }

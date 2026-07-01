@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {getCourses, updateCourse, deleteCourse} from '../services/api';
+import { Link } from 'react-router-dom';
 function MyCourses() {
 
     const [courses, setCourses] = useState([]);
@@ -104,6 +105,9 @@ function MyCourses() {
                         <p className="text-slate-500 mt-1.5 text-sm">
                             Quản lý và theo dõi các khóa học mà bạn đã đăng.
                         </p>
+                        <Link to="/courses/deleted" className="text-blue-500 hover:text-blue-700">
+                            Thùng rác
+                        </Link>
                     </div>
                 </header>
                 {/* Modal for deleting course */}

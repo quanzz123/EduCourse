@@ -6,6 +6,7 @@ import Courses from './pages/courses';
 import CourseDetail from './pages/courseDetail';
 import CreateCourse from './pages/createCourse';
 import MyCourses from './pages/myCourses';
+import DeletedCourses from './pages/deletedCourses';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/courses/:id" element={<CourseDetail />} />
         <Route path="/courses/create" element={<CreateCourse />} />
         <Route path="/courses/my-courses" element={<MyCourses />} />
+        <Route path="/courses/deleted" element={<DeletedCourses />} />
         
         {/* Trang danh sách học viên */}
         <Route path="/users" element={<Users />} />

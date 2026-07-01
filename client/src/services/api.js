@@ -37,4 +37,16 @@ export const deleteCourse = async (id) => {
   return res.data
 }
 
+// Lấy danh sách khóa học trong thùng rác
+export const getDeletedCourses = async () => {
+  const res = await api.get('/course/deleted');
+  return res.data;
+};
+
+// API khôi phục
+export const restoreCourse = async (id) => {
+  const res = await api.put('/course/restore/' + id);
+  return res.data;
+};
+
 export default api;

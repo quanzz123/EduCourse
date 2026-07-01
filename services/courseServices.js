@@ -33,6 +33,21 @@ class courseServices {
         }
         return false;
     }
+    // lấy các khóa học bị xóa
+    async getDeletedCourses() {
+        return await db.courses.findAll({
+            where: {isDeleted: true}
+        });
+    }
+    // khôi phục khóa học
+    async restore(id) {
+        const course = await db.courses.findByPk(id);
+        if(course) {
+            await course.update({isDeleted: false});
+            return course;
+        }
+        return null;
+    }
 }
 
 module.exports = new courseServices();
