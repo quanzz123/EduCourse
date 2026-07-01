@@ -33,6 +33,28 @@ class courseController {
             res.status(500).json({error:error.message})
         }
     }
+    async update(req, res) {
+        try {
+            const updatedCourse = await courseService.update(req.params.id, req.body);
+            if (!updatedCourse) {
+                return res.status(404).json({ message: 'Course not found' });
+            }
+            res.status(200).json({ message: 'Course updated successfully', data: updatedCourse });
+        } catch (error) {
+            res.status(500).json({error:error.message})
+        }
+    }
+    async delete(req, res) {
+        try {
+            const deleted = await courseService.delete(req.params.id);
+            if (!deleted) {
+                return res.status(404).json({ message: 'Course not found' });
+            }
+            res.status(200).json({ message: 'Course deleted successfully' });
+        } catch (error) {
+            res.status(500).json({error:error.message})
+        }
+    }
 }
 
 module.exports = new courseController();

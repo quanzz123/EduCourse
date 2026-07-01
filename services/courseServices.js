@@ -3,7 +3,9 @@ const db = require('../models')
 class courseServices {
     // get all users
     async  getAllCourses() {
-        return await db.courses.findAll();
+        return await db.courses.findAll({
+            where: {isDeleted: false}
+        });
     }
 
     // 2. Lấy 1 Course theo ID
@@ -15,6 +17,21 @@ class courseServices {
     async create(data) {
         return  await db.courses.create(data);
         
+    }
+    async update(id, data) {
+        const course = await db.courses.findByPk(id);
+        if(course) {
+            return await course.update(data);
+        }
+        return null;
+    }
+    async delete(id) {
+        const course = await db.courses.findByPk(id);
+        if(course) {
+            await course.update({isDeleted: true});
+            return true;
+        }
+        return false;
     }
 }
 

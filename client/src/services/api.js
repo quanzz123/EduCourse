@@ -27,4 +27,14 @@ export const createCourse = async (courseData) => {
   return res.data
 }
 
+export const updateCourse = async (id, courseData) => {
+  const res = await api.put('/course/' + id, courseData)
+  return res.data
+}
+
+export const deleteCourse = async (id) => {
+  const res = await api.delete('/course/' + id)
+  return res.data
+}
+
 export default api;
