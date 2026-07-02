@@ -5,6 +5,15 @@ const api = axios.create({
   baseURL: 'http://localhost:3001/api',
 });
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+
 // Hàm gọi API lấy danh sách users
 export const getUsers = async () => {
   const response = await api.get('/users');
@@ -46,6 +55,19 @@ export const getDeletedCourses = async () => {
 // API khôi phục
 export const restoreCourse = async (id) => {
   const res = await api.put('/course/restore/' + id);
+  return res.data;
+};
+
+// auth api
+// register
+export const register = async (userData) => {
+  const res = await api.post('/auth/register', userData);
+  return res.data;
+};
+
+//login
+export const login = async (userData) => {
+  const res = await api.post('/auth/login', userData);
   return res.data;
 };
 

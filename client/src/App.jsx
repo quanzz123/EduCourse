@@ -7,6 +7,8 @@ import CourseDetail from './pages/courseDetail';
 import CreateCourse from './pages/createCourse';
 import MyCourses from './pages/myCourses';
 import DeletedCourses from './pages/deletedCourses';
+import Login from './pages/login';
+
 
 function App() {
   return (
@@ -29,6 +31,9 @@ function App() {
         
         {/* Trang danh sách học viên */}
         <Route path="/users" element={<Users />} />
+
+        {/* auth */}
+        <Route path="/login" element={<Login />} />
         
         {/* Trang tin tức placeholder */}
         <Route 

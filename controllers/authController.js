@@ -11,6 +11,11 @@ class AuthController {
         try {
             const { firstName, lastName, email, password} = req.body;
 
+            // Kiểm tra các trường thông tin bắt buộc
+            if (!firstName || !lastName || !email || !password) {
+                return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin (Họ, Tên, Email, Mật khẩu)' });
+            }
+
             // kiểm tra emial đã tồn tại
             const existingUser = await UserServices.findByEmail(email);
             if(existingUser) {
@@ -30,6 +35,11 @@ class AuthController {
     async login(req, res) {
         try {
             const { email, password } = req.body;
+
+            if (!email || !password) {
+                return res.status(400).json({ message: 'Vui lòng nhập đầy đủ email và mật khẩu' });
+            }
+
             const user = await UserServices.findByEmail(email);
             if(!user) {
                 return res.status(400).json({ message: 'Email hoặc mật khẩu không đúng!' });

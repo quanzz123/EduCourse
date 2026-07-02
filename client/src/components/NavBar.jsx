@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
 
 function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
   // Đóng dropdown khi click ra ngoài
   useEffect(() => {
@@ -75,189 +80,159 @@ function NavBar() {
             </div>
           </div>
 
-          {/* Phải: Avatar & Dropdown */}
+          {/* Phải: Avatar & Dropdown hoặc Đăng nhập */}
           <div className="flex items-center space-x-3">
             {/* Nút Đăng khóa học */}
-            <Link
-              to="/courses/create"
-              className="inline-flex items-center space-x-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold transition-all duration-300 shadow-sm shadow-indigo-100 hover:shadow-md hover:shadow-indigo-200"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={3}
+            {user && (
+              <Link
+                to="/courses/create"
+                className="inline-flex items-center space-x-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold transition-all duration-300 shadow-sm shadow-indigo-100 hover:shadow-md hover:shadow-indigo-200"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
-              <span className="hidden sm:inline">Đăng khóa học</span>
-            </Link>
-
-            <div className="relative" ref={dropdownRef}>
-              {/* Nút Avatar */}
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-2 p-1.5 rounded-full hover:bg-slate-50 border border-slate-100 transition-all duration-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20"
-                aria-expanded={isDropdownOpen}
-                aria-haspopup="true"
-              >
-                {/* Ảnh avatar hoặc chữ cái đại diện */}
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-inner">
-                  A
-                </div>
-                <span className="hidden sm:inline text-sm font-semibold text-slate-700 pr-1">
-                  Admin
-                </span>
-                {/* Icon mũi tên xuống */}
                 <svg
-                  className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${
-                    isDropdownOpen ? 'rotate-180' : ''
-                  }`}
+                  className="w-4.5 h-4.5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  strokeWidth={3}
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2.5}
-                    d="M19 9l-7 7-7-7"
+                    d="M12 4.5v15m7.5-7.5h-15"
                   />
                 </svg>
-              </button>
+                <span className="hidden sm:inline">Đăng khóa học</span>
+              </Link>
+            )}
 
-              {/* Menu Dropdown */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 transition-all duration-200 origin-top-right transform animate-in fade-in slide-in-from-top-2 duration-150">
-                  {/* Thông tin User */}
-                  <div className="px-4 py-3 border-b border-slate-100">
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                      Tài khoản
-                    </p>
-                    <p className="text-sm font-bold text-slate-800 truncate">
-                      Nguyễn Văn A
-                    </p>
-                    <p className="text-xs text-slate-500 truncate">
-                      admin@educourse.com
-                    </p>
+            {user ? (
+              <div className="relative" ref={dropdownRef}>
+                {/* Nút Avatar */}
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center space-x-2 p-1.5 rounded-full hover:bg-slate-50 border border-slate-100 transition-all duration-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20"
+                  aria-expanded={isDropdownOpen}
+                  aria-haspopup="true"
+                >
+                  {/* Ảnh avatar hoặc chữ cái đại diện */}
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-inner">
+                    {user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U'}
                   </div>
+                  <span className="hidden sm:inline text-sm font-semibold text-slate-700 pr-1">
+                    {user.firstName} {user.lastName}
+                  </span>
+                  {/* Icon mũi tên xuống */}
+                  <svg
+                    className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${
+                      isDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
 
-                  {/* Danh sách Links */}
-                  <div className="p-1.5 space-y-0.5">
-                    <Link
-                      to="/courses/create"
-                      className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors duration-200"
-                    >
-                      <svg
-                        className="w-4.5 h-4.5 text-slate-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <span>Đăng khóa học</span>
-                    </Link>
-                    <Link
-                      to="/courses/my-courses"
-                      className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors duration-200"
-                    >
-                      <svg
-                        className="w-4.5 h-4.5 text-slate-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <span>Khóa học của tôi</span>
-                    </Link>
-                    <Link
-                      to="/profile"
-                      className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors duration-200"
-                    >
-                      <svg
-                        className="w-4.5 h-4.5 text-slate-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </svg>
-                      <span>Trang cá nhân</span>
-                    </Link>
-                    <Link
-                      to="/settings"
-                      className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors duration-200"
-                    >
-                      <svg
-                        className="w-4.5 h-4.5 text-slate-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      <span>Cài đặt</span>
-                    </Link>
-                  </div>
+                {/* Menu Dropdown */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 transition-all duration-200 origin-top-right transform animate-in fade-in slide-in-from-top-2 duration-150">
+                    {/* Thông tin User */}
+                    <div className="px-4 py-3 border-b border-slate-100">
+                      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        Tài khoản
+                      </p>
+                      <p className="text-sm font-bold text-slate-800 truncate">
+                        {user.firstName} {user.lastName}
+                      </p>
+                      <p className="text-xs text-slate-500 truncate">
+                        {user.email}
+                      </p>
+                    </div>
 
-                  {/* Logout */}
-                  <div className="border-t border-slate-100 p-1.5 mt-1.5">
-                    <button
-                      onClick={() => console.log('Đăng xuất')}
-                      className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-red-600 hover:bg-red-50/50 transition-colors duration-200 text-left font-medium"
-                    >
-                      <svg
-                        className="w-4.5 h-4.5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                    {/* Danh sách Links */}
+                    <div className="p-1.5 space-y-0.5">
+                      <Link
+                        to="/courses/create"
+                        className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors duration-200"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
+                        <svg
+                          className="w-4.5 h-4.5 text-slate-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
                           strokeWidth={2}
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
-                      </svg>
-                      <span>Đăng xuất</span>
-                    </button>
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <span>Đăng khóa học</span>
+                      </Link>
+                      <Link
+                        to="/courses/my-courses"
+                        className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors duration-200"
+                      >
+                        <svg
+                          className="w-4.5 h-4.5 text-slate-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <span>Khóa học của tôi</span>
+                      </Link>
+                    </div>
+
+                    {/* Logout */}
+                    <div className="border-t border-slate-100 p-1.5 mt-1.5">
+                      <button
+                        onClick={() => {
+                          logout();
+                          navigate('/login');
+                        }}
+                        className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl text-sm text-red-600 hover:bg-red-50/50 transition-colors duration-200 text-left font-medium"
+                      >
+                        <svg
+                          className="w-4.5 h-4.5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                          />
+                        </svg>
+                        <span>Đăng xuất</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="inline-flex items-center justify-center px-4 py-2 border border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded-xl text-sm font-semibold transition-all duration-300"
+              >
+                Đăng nhập
+              </Link>
+            )}
           </div>
         </div>
       </div>
