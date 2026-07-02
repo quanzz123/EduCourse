@@ -96,6 +96,9 @@ function DeletedCourses() {
                         <thead className="bg-neutral-secondary-soft border-b border-default">
                             <tr>
                                 <th scope="col" className="px-6 py-3 font-medium">
+                                    STT
+                                </th>
+                                <th scope="col" className="px-6 py-3 font-medium">
                                     Tên khóa học
                                 </th>
                                 <th scope="col" className="px-6 py-3 font-medium">
@@ -115,12 +118,15 @@ function DeletedCourses() {
                                     <td className='px-6 py-4'> không có khóa học nào</td>
                                 </tr>
                             ) : (
-                                courses.map((course) => (
+                                courses.map((course, index) => (
 
                                 <tr key={course.id} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
                                     <th scope="row" className="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                                        {course.title}
+                                        {index + 1}
                                     </th>
+                                    <td className="px-6 py-4">
+                                        {course.title}
+                                    </td>
                                     <td className="px-6 py-4">
                                         {course.videoId}
                                     </td>
